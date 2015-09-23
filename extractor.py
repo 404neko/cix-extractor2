@@ -1,8 +1,8 @@
-#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import requests as req
 import re
+import chardet
 
 DBUG   = 0
 
@@ -23,6 +23,9 @@ class Extractor():
         self.ctexts    = []
         self.cblocks   = []
 
+    def getCoding(self):
+        pass
+
     def getRawPage(self):
         try:
             resp = req.get(self.url, timeout=self.timeout)
@@ -31,9 +34,9 @@ class Extractor():
 
         if DBUG: print(resp.encoding)
 
-        resp.encoding = "UTF-8"
+        resp.encoding = chardet.detect(resp.content)['encoding']
 
-        return resp.status_code, resp.text
+        return resp.status_code, resp.content.decode(resp.encoding)
 
     def processTags(self):
         self.body = re.sub(reCOMM, "", self.body)
@@ -78,5 +81,5 @@ class Extractor():
         # print(len(self.body.strip("\n")))
 
 if __name__ == '__main__':
-    ext = Extractor(url="http://blog.rainy.im/2015/09/02/web-content-and-main-image-extractor/",blockSize=5, image=False)
-    print(ext.getContext())
+    ext = Extractor(url="http://news.163.com/15/0923/11/B46NMA3500011229.html",blockSize=5, image=False)
+    print(ext.getContext().encode('UTF-8'))
