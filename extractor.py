@@ -36,7 +36,7 @@ class Extractor():
 
         resp.encoding = chardet.detect(resp.content)['encoding']
 
-        return resp.status_code, resp.content.decode(resp.encoding)
+        return resp.status_code, resp.content.decode(resp.encoding, 'ignore')
 
     def processTags(self):
         self.body = re.sub(reCOMM, "", self.body)
@@ -81,5 +81,5 @@ class Extractor():
         # print(len(self.body.strip("\n")))
 
 if __name__ == '__main__':
-    ext = Extractor(url="http://news.163.com/15/0923/11/B46NMA3500011229.html",blockSize=5, image=False)
-    print(ext.getContext().encode('UTF-8'))
+    ext = Extractor(url="http://163.com",blockSize=5, image=False)
+    print(ext.getContext().encode('utf-8') )
